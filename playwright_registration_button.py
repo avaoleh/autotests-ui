@@ -8,6 +8,10 @@ with sync_playwright() as playwright:
     # Переходим на страницу входа
     page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
 
+    # Проверяем, что кнопка registration не активна
+    registration_button = page.get_by_test_id('registration-page-registration-button')
+    expect(registration_button).to_be_disabled()
+
     # Заполняем поле email
     email_input = page.locator('//*[@id=":r0:"]')
     email_input.fill("user.name@gmail.com")
@@ -20,14 +24,7 @@ with sync_playwright() as playwright:
     password_input = page.locator('//*[@id=":r2:"]')
     password_input.fill("password")
 
-    # Нажимаем на кнопку registration
-    registration_button = page.get_by_test_id('registration-page-registration-button')
-    registration_button.click()
+    # Проверяем, что кнопка registration активна
+    expect(registration_button).not_to_be_disabled()
 
-    # Проверяем, что появилось сообщение об ошибке
-    dashboard_txt = page.get_by_test_id('dashboard-toolbar-title-text')
-    expect(dashboard_txt).to_be_visible()
-    expect(dashboard_txt).to_have_text("Dashboard")
-
-    # Задержка для наглядности выполнения теста (не рекомендуется использовать в реальных автотестах)
-    page.wait_for_timeout(5000)
+    #page.wait_for_timeout(5000)
