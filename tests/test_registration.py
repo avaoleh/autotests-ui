@@ -2,9 +2,29 @@ import pytest  # Импортируем библиотеку pytest
 from playwright.sync_api import sync_playwright, expect
 
 
+# @pytest.mark.regression
+# @pytest.mark.registration
+# def test_successful_registration(chromium_page_with_state):
+#     page = chromium_page_with_state
+#     page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard')
+#     page.wait_for_timeout(5000)
+
+
+
 @pytest.mark.regression
 @pytest.mark.registration
-def test_successful_registration(chromium_page_with_state):
-    page = chromium_page_with_state
-    page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard')
-    page.wait_for_timeout(5000)
+def test_successful_registration(registration_page, dashboard_page):
+    # Переходим на страницу регистрации
+    registration_page.page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
+
+    # Регистрируем нового пользователя
+    test_data = {
+        'email': 'user.name@gmail.com',
+        'username': 'user',
+        'password': 'password'
+    }
+
+    registration_page.register_new_user(**test_data)
+
+    # Проверяем, что мы на дашборде
+    dashboard_page.check_dashboard_title_visible()

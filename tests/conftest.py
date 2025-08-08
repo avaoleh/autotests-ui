@@ -1,8 +1,4 @@
-import pytest
-from playwright.sync_api import Playwright, Page
-
-
-# conftest.py
 pytest_plugins = (
-    "fixtures.browsers"
+    "fixtures.pages", # Подключаем фикстуры страниц
+    "fixtures.browsers" # Подключали ранее в предыдущих уроках
 )
