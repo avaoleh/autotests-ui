@@ -1,11 +1,14 @@
 from playwright.sync_api import Page, expect
 
 from pages.base_page import BasePage
-
+from components.navigation.navbar_component import NavbarComponent
 
 class CoursesListPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
+
+        # Добавляем компоненты
+        self.navbar = NavbarComponent(page)
 
         # Заголовок и кнопка создания курса
         self.courses_title = page.get_by_test_id('courses-list-toolbar-title-text')
