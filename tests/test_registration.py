@@ -15,7 +15,7 @@ from playwright.sync_api import sync_playwright, expect
 @pytest.mark.registration
 def test_successful_registration(registration_page, dashboard_page):
     # Переходим на страницу регистрации
-    registration_page.page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
+    registration_page.visit('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
 
     # Регистрируем нового пользователя
     test_data = {
@@ -27,4 +27,4 @@ def test_successful_registration(registration_page, dashboard_page):
     registration_page.register_new_user(**test_data)
 
     # Проверяем, что мы на дашборде
-    dashboard_page.check_dashboard_title_visible()
+    dashboard_page.check_visible_dashboard_title()
