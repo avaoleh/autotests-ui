@@ -25,6 +25,4 @@ def test_successful_registration(registration_page, dashboard_page):
     }
 
     registration_page.register_new_user(**test_data)
-
-    # Проверяем, что мы на дашборде
-    dashboard_page.check_visible_dashboard_title()
+    dashboard_page.dashboard_toolbar.check_visible()
