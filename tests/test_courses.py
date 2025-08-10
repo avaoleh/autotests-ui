@@ -40,7 +40,7 @@ def test_create_course(courses_list_page: CoursesListPage, create_course_page: C
     create_course_page.image_upload_widget.check_visible(is_image_uploaded=False)
 
     # 4. Проверяем форму создания курса — значения по умолчанию
-    create_course_page.check_visible_create_course_form(
+    create_course_page.create_course_form_component.check_visible(
         title="",
         estimated_time="",
         description="",
@@ -49,8 +49,9 @@ def test_create_course(courses_list_page: CoursesListPage, create_course_page: C
     )
 
     # 5. Проверяем наличие заголовка "Exercises" и кнопки создания задания
-    create_course_page.check_visible_exercises_title()
-    create_course_page.check_visible_create_exercise_button()
+    # create_course_page.check_visible_exercises_title()
+    # create_course_page.check_visible_create_exercise_button()
+    create_course_page.create_course_exercises_toolbar_view_component.check_visible()
 
     # 6. Проверяем пустой блок заданий
     create_course_page.check_visible_exercises_empty_view()
@@ -68,7 +69,7 @@ def test_create_course(courses_list_page: CoursesListPage, create_course_page: C
     #create_course_page.check_visible_preview_image()
 
     # 10. Заполняем форму создания курса
-    create_course_page.fill_create_course_form(
+    create_course_page.create_course_form_component.fill(
         title="Playwright",
         estimated_time="2 weeks",
         description="Playwright",
@@ -77,7 +78,7 @@ def test_create_course(courses_list_page: CoursesListPage, create_course_page: C
     )
 
     # 11. Нажимаем на кнопку создания курса
-    create_course_page.click_create_course_button()
+    create_course_page.create_course_toolbar_view_component.click_create_course_button()
 
     # 12. После редиректа проверяем заголовок на странице со списком курсов
     #courses_list_page.check_visible_courses_title()
