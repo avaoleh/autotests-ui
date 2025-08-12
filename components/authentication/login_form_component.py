@@ -4,7 +4,8 @@ from components.base_component import BaseComponent
 from elements.input import Input
 from elements.text import Text
 
-class LoginFormComponent (BaseComponent):
+
+class LoginFormComponent(BaseComponent):
     def __init__(self, page: Page):
         super().__init__(page)
 
@@ -15,8 +16,6 @@ class LoginFormComponent (BaseComponent):
         self.email_input = Input(page, 'login-form-email-input', 'Email Input')
         self.password_input = Input(page, 'login-form-password-input', 'Password Input')
         self.wrong_email_or_password_alert = Text(page, 'login-page-wrong-email-or-password-alert', 'Error Alert')
-
-
 
     def fill(self, email: str, password: str):
         # self.email_input.fill(email)
@@ -33,3 +32,9 @@ class LoginFormComponent (BaseComponent):
         # expect(self.wrong_email_or_password_alert).to_have_text("Wrong email or password")
         self.wrong_email_or_password_alert.check_visible()
         self.wrong_email_or_password_alert.check_have_text("Wrong email or password")
+
+    def check_visible_login_form(self):
+        # expect(self.wrong_email_or_password_alert).to_be_visible()
+        # expect(self.wrong_email_or_password_alert).to_have_text("Wrong email or password")
+        self.email_input.check_visible()
+        self.password_input.check_visible()

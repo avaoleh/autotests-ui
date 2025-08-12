@@ -5,6 +5,7 @@ from elements.button import Button
 from elements.link import Link
 from elements.text import Text
 from pages.base_page import BasePage
+import re
 
 
 class LoginPage(BasePage):
@@ -21,6 +22,7 @@ class LoginPage(BasePage):
 
     def click_login_button(self):
         self.login_button.click()
+        self.check_current_url(re.compile(".*/#/auth/login"))
 
     def click_registration_link(self):
         self.registration_link.click()

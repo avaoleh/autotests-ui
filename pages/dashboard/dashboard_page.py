@@ -14,7 +14,7 @@ class DashboardPage(BasePage):
         # Initialize common components
         self.navbar = NavbarComponent(page)
         self.sidebar = SidebarComponent(page)
-        self.dashboard_toolbar = DashboardToolbarViewComponent(page)
+        self.dashboard_toolbar_view_component = DashboardToolbarViewComponent(page)
 
         # Initialize chart components using ChartViewComponent
         self.students_chart = ChartViewComponent(page, "students", "bar")
