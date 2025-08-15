@@ -23,6 +23,10 @@ class TestData(BaseModel):
 
 
 class Settings(BaseSettings):
+
+    def get_base_url(self) -> str:
+        return f"{self.app_url}/"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
