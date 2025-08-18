@@ -23,7 +23,7 @@ class SidebarListItemComponent(BaseComponent):
         self.title = Text(page, f"{identifier}-drawer-list-item-title-text", f"{name} Title")
         self.button = Button(page, f"{identifier}-drawer-list-item-button", f"{name} Button")
 
-    @allure.step('Check visible "{title}" sidebar list item')
+    #@allure.step('Check visible "{name}" sidebar list item')
     def check_visible(self):
         """Проверяет, что иконка, текст и кнопка видимы, и текст совпадает с name."""
         # expect(self.icon).to_be_visible()
@@ -31,10 +31,12 @@ class SidebarListItemComponent(BaseComponent):
         # expect(self.title).to_have_text(title)
         # expect(self.button).to_be_visible()
 
+
         self.icon.check_visible()
         self.title.check_visible()
         self.title.check_have_text(self.name)
         self.button.check_visible()
+
 
     def click(self):
         """Кликает по кнопке пункта меню."""
