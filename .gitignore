@@ -8,6 +8,10 @@ __pycache__
 # allure
 allure-results
 allure-report
-tracing
+
+# testing artifacts
+*.html
+*.json
 videos
+tracing
 
