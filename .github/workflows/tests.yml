@@ -52,6 +52,7 @@ jobs:
   publish-report:
     needs: run-tests  # Выполняется только после успешного run-tests
     runs-on: ubuntu-latest
+    if: always()
 
     steps:
       # 1. Скачиваем артефакт с результатами тестов
