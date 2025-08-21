@@ -1,0 +1,2 @@
+INFO     BASE_PAGE:base_page.py:15 Opening the url "https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration"
+INFO     BASE_PAGE:base_page.py:15 Opening the url "AppRoute.REGISTRATION"
