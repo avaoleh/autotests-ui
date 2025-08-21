@@ -5,7 +5,7 @@ import allure
 from tools.logger import get_logger  # Импортируем get_logger
 
 logger = get_logger("Input")  # Инициализируем logger
-
+from ui_coverage_tool import ActionType
 class Input(BaseElement):
 
     @property
@@ -24,6 +24,9 @@ class Input(BaseElement):
             logger.info(step)  # Добавили логирование
             locator.fill(value)
 
+        # После успешного fill фиксируем покрытие как действие FILL
+        self.track_coverage(ActionType.FILL, nth, **kwargs)
+
     def check_have_value(self, value: str, nth: int = 0, **kwargs):
         step = f'Checking that {self.type_of} "{self.name}" has a value "{value}"'
         with allure.step(step):
@@ -32,4 +35,13 @@ class Input(BaseElement):
             logger.info(step)  # Добавили логирование
             expect(locator).to_have_value(value)
 
+        # Фиксируем в покрытии, что значение проверено — тип VALUE
+        self.track_coverage(ActionType.VALUE, nth, **kwargs)
+
+    def get_raw_locator(self, nth: int = 0, **kwargs) -> str:
+        # Переопределяем метод формирования XPath-селектора:
+        #  - сначала получаем общий селектор блока
+        #  - затем уточняем путь до самого <input>, добавляя '//input'
+        # Это нужно, чтобы трекер точно знал, с каким элементом шло взаимодействие.
+        return f'{super().get_raw_locator(**kwargs)}//input'
 

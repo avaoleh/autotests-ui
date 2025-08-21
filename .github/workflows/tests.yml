@@ -1,97 +1,102 @@
-# Имя вашего workflow, которое будет отображаться в интерфейсе GitHub Actions
 name: UI tests
 
-# Указываем, когда будет запускаться данный workflow
 on:
   push:
     branches:
-      - main  # Запускать workflow при коммите в main
+      - main
   pull_request:
     branches:
-      - main  # Запускать workflow при PR в main
+      - main
 
-# Определяем две независимые джобы
 jobs:
-  # Джоба для запуска автотестов
   run-tests:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Клонируем репозиторий
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # 2. Устанавливаем Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      # 3. Устанавливаем зависимости и браузеры Playwright
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           playwright install --with-deps
 
-      # 4. Запускаем тесты и генерируем Allure-результаты
-      - name: Run Playwright tests with pytest
+      - name: Run Playwright tests with pytest and generate Allure results
         run: |
           pytest -m regression --alluredir=allure-results --numprocesses 2
 
-      # 5. Сохраняем результаты как артефакт
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
+      # Восстанавливаем историю покрытия из кеша
+      - name: Restore Coverage history
+        uses: actions/cache/restore@v4
+        with:
+          path: coverage-history.json
+          key: coverage-history-${{ github.run_id }}
+          restore-keys: |
+            coverage-history-
+
+      # Генерируем HTML-отчет и обновляем историю
+      - name: Generate Coverage report
+        run: |
+          ui-coverage-tool save-report
+
+      # Сохраняем историю обратно в кеш
+      - name: Cache Coverage  history
         if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: coverage-history.json
+          key: coverage-history-${{ github.run_id }}
+
+      # Загружаем HTML-отчет как артефакт
+      - name: Upload Coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.html
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: allure-results/
-          if-no-files-found: error  # Критично — если папка не найдена, упасть
+          path: allure-results
 
 
-  # Джоба для публикации отчёта Allure
   publish-report:
-    needs: run-tests  # Выполняется только после успешного run-tests
-    runs-on: ubuntu-latest
     if: always()
+    needs: [ run-tests ]
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Скачиваем артефакт с результатами тестов
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
       - name: Download Allure results
         uses: actions/download-artifact@v4
         with:
           name: allure-results
-          path: allure-results/
+          path: allure-results
 
-      # 2. Получаем историю отчётов из ветки gh-pages
-      - name: Get Allure history
-        uses: actions/checkout@v4
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      # 3. Копируем историю, если она существует
-      - name: Prepare Allure history
-        run: |
-          if [ -d "gh-pages/history" ]; then
-            mkdir -p allure-history
-            cp -r gh-pages/history/* allure-history/ 2>/dev/null || true
-          fi
-
-      # 4. Генерируем отчёт Allure с историей
       - name: Generates Allure Report with history
         uses: simple-elf/allure-report-action@v1.7
+        if: always()
         with:
           allure_results: allure-results
           allure_history: allure-history
 
-      # 5. Публикуем отчёт на GitHub Pages
-      - name: Deploy report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy report to Github Pages
         if: always()
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
