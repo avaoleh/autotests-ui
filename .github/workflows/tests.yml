@@ -33,6 +33,7 @@ jobs:
 
       # Восстанавливаем историю покрытия из кеша
       - name: Restore Coverage history
+        if: always()
         uses: actions/cache/restore@v4
         with:
           path: coverage-history.json
@@ -42,6 +43,7 @@ jobs:
 
       # Генерируем HTML-отчет и обновляем историю
       - name: Generate Coverage report
+        if: always()
         run: |
           ui-coverage-tool save-report
 
